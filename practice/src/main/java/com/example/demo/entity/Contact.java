@@ -18,6 +18,7 @@ import lombok.Data;
 @Data
 @Table(name = "contacts")
 public class Contact {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")

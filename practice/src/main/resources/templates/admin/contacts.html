@@ -19,7 +19,9 @@
 		</thead>
 		<tbody>
 			<tr th:each="contact : ${contactList}">
-				<td th:text="*{contact.id}"></td>
+				<td>
+					<a th:href="@{/admin/contacts/{id}(id=*{contact.id})}" th:text="*{contact.id}"></a>
+				</td>
 				<td th:text="*{contact.lastName}"></td>
 				<td th:text="*{contact.firstName}"></td>
 				<td th:text="*{contact.contactType}"></td>

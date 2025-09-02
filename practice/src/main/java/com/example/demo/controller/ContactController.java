@@ -21,19 +21,19 @@ public class ContactController {
 	@Autowired
 	private ContactService contactService;
 
-	@GetMapping("contact/contact")
+	@GetMapping("/contact/contact")
 	public String contact(Model model) {
 		model.addAttribute("contactForm", new ContactForm());
 
-		return "contact/contact";
+		return "/contact/contact";
 	}
 
-	@PostMapping("contact/contact")
+	@PostMapping("/contact/contact")
 	public String contact(@Validated @ModelAttribute("contactForm") ContactForm contactForm, BindingResult errorResult,
 			HttpServletRequest request) {
 
 		if (errorResult.hasErrors()) {
-			return "contact/contact";
+			return "/contact/contact";
 		}
 
 		HttpSession session = request.getSession();
