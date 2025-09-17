@@ -13,9 +13,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.entity.Contact;
+import com.example.demo.form.AdminForm;
 import com.example.demo.form.ContactForm;
+import com.example.demo.service.AdminService;
 import com.example.demo.service.ContactService;
 
 @Controller
@@ -23,7 +26,66 @@ public class AdminController {
 
 	
 	@Autowired
+	AdminService adminService;
+	@Autowired
 	ContactService contactService;
+	
+	
+	//管理者の登録画面表示
+	@GetMapping("/admin/signup")
+	public String signupView(Model model) {
+		
+		model.addAttribute("adminForm", new AdminForm());
+		
+		return "admin/signup";
+	}
+	
+	//管理者の登録
+	@PostMapping("/admin/signup")
+	public String signup(@Validated @ModelAttribute("adminForm") AdminForm adminForm, BindingResult errorResult, Model model) {
+		
+		if (errorResult.hasErrors()) {
+			return "admin/signup";
+		}
+		
+		if(adminService.checkEmail(adminForm)) {
+			
+			model.addAttribute("emailError", "メールアドレスが重複しています");
+			return "admin/signup";
+		}else {
+		
+			adminService.saveAdmin(adminForm);
+			return "redirect:/admin/signin";
+		}
+	}
+	
+	
+	//ログイン画面の表示
+	@GetMapping("/admin/signin")
+	public String signinView(Model model) {
+		
+		model.addAttribute("adminForm", new AdminForm());
+		return "admin/signin";
+	}
+	
+	
+	//ログインの精査
+	@PostMapping("/admin/signin")
+	public String signin(@RequestParam("email") String email, @RequestParam("password") String password, Model model) {
+		
+		boolean isAuthenticated = adminService.authenticate(email, password);
+		
+		if(isAuthenticated) {
+			
+			return "redirect:/admin/contacts";
+		}else {
+			
+			model.addAttribute("adminForm", new AdminForm());
+			
+			return "admin/signin";
+		}
+	}
+
 
 	//一覧表示のget
 	@GetMapping("/admin/contacts")
