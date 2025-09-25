@@ -58,7 +58,6 @@ public class AdminController {
 		}
 	}
 	
-	
 	//ログイン画面の表示
 	@GetMapping("/admin/signin")
 	public String signinView(Model model) {
@@ -66,7 +65,14 @@ public class AdminController {
 		model.addAttribute("adminForm", new AdminForm());
 		return "admin/signin";
 	}
-
+	
+	/*
+	@GetMapping("/admin/signout")
+	public String signout(Model model) {
+		return "admin/signout";
+	}
+	*/
+	
 	//一覧表示のget
 	@GetMapping("/admin/contacts")
 	public String contactList(Model model) {
