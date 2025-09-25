@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.entity.Contact;
 import com.example.demo.form.AdminForm;
@@ -59,7 +58,6 @@ public class AdminController {
 		}
 	}
 	
-	
 	//ログイン画面の表示
 	@GetMapping("/admin/signin")
 	public String signinView(Model model) {
@@ -68,25 +66,13 @@ public class AdminController {
 		return "admin/signin";
 	}
 	
-	
-	//ログインの精査
-	@PostMapping("/admin/signin")
-	public String signin(@RequestParam("email") String email, @RequestParam("password") String password, Model model) {
-		
-		boolean isAuthenticated = adminService.authenticate(email, password);
-		
-		if(isAuthenticated) {
-			
-			return "redirect:/admin/contacts";
-		}else {
-			
-			model.addAttribute("adminForm", new AdminForm());
-			
-			return "admin/signin";
-		}
+	/*
+	@GetMapping("/admin/signout")
+	public String signout(Model model) {
+		return "admin/signout";
 	}
-
-
+	*/
+	
 	//一覧表示のget
 	@GetMapping("/admin/contacts")
 	public String contactList(Model model) {

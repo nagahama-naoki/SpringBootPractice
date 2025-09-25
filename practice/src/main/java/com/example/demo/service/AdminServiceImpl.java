@@ -1,6 +1,12 @@
 package com.example.demo.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Collections;
+import java.util.Optional;
+
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entity.Admin;
@@ -8,40 +14,47 @@ import com.example.demo.form.AdminForm;
 import com.example.demo.repository.AdminRepository;
 
 @Service
-public class AdminServiceImpl implements AdminService{
-	
-	@Autowired
-	private AdminRepository adminRepository;
+public class AdminServiceImpl implements AdminService, UserDetailsService {
+
+	private final AdminRepository adminRepository;
+	private final PasswordEncoder passwordEncoder;
+
+	public AdminServiceImpl(AdminRepository adminRepository, PasswordEncoder passwordEncoder) {
+		this.adminRepository = adminRepository;
+		this.passwordEncoder = passwordEncoder;
+	}
 	
 	@Override
 	public void saveAdmin(AdminForm adminForm) {
-		
+
 		Admin admin = new Admin();
-		
+
 		admin.setLastName(adminForm.getLastName());
 		admin.setFirstName(adminForm.getFirstName());
 		admin.setEmail(adminForm.getEmail());
-		admin.setPassword(adminForm.getPassword());
-		
+		admin.setPassword(passwordEncoder.encode(adminForm.getPassword()));
+
 		adminRepository.save(admin);
 	}
-	
+
 	//emailが重複していないかのメソッド
 	@Override
 	public boolean checkEmail(AdminForm adminForm) {
-		
+
 		return adminRepository.existsByEmail(adminForm.getEmail());
 	}
-	
+
 	@Override
-	public boolean authenticate(String email, String password) {
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
+		Optional<Admin> optionalAdmin = adminRepository.findByEmail(email);
+
+		Admin admin = optionalAdmin.orElseThrow(() -> new UsernameNotFoundException("ユーザーが見つかりません: " + email));
 		
-		Admin admin = adminRepository.findByEmail(email);
-		
-		if(admin == null) {
-			return false;
-		}
-		
-		return password.equals(admin.getPassword());
+		return new org.springframework.security.core.userdetails.User(
+				admin.getEmail(),
+				admin.getPassword(), // パスワードはハッシュ化されている必要があります
+				Collections.emptyList() // 権限リスト（必要に応じて実装）
+		);
 	}
 }
