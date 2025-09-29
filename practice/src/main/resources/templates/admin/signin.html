@@ -6,27 +6,32 @@
 </head>
 <body>
 	<h1>管理者のログイン画面</h1>
-	<form th:action="@{/admin/signin}" th:object="${adminForm}" method="post">
+	<div th:if="${param.error}" style="color.red">
+		ログインに失敗
+	</div>
+	<div th:if="${param.logout}" style="color.red">
+		ログアウト
+	</div>
+	
+	<form th:action="@{/admin/signin}" method="post">
 		<table border="1">
 			<tr>
 				<td>メールアドレス</td>
 				<td>
-					<input type="text" th:field="*{email}">
-					<span th:if="${#fields.hasErrors('email')}" th:errors="{email}" style="color:red"></span>
+					<input type="text" name="email">
 				</td>
 			</tr>
 			<tr>
 				<td>パスワード</td>
 				<td>
-					<input type="text" th:field="*{password}">
-					<span th:if="${#fields.hasErrors('password')}" th:errors="{password}" style="color:red"></span>
+					<input type="password" name="password">
 				</td>
-			<tr>
+			</tr>
 		</table>
 		<input type="submit" value="ログイン">
 	</form>
-	<form th:action="@{/admin/signup}" method= "get">
-		<input type ="submit" value="新規登録">
+	<form th:action="@{/admin/signup}" method="get">
+		<input type="submit" value="新規登録">
 	</form>
 </body>
 </html>

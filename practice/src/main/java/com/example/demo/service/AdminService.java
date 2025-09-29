@@ -7,6 +7,5 @@ public interface AdminService {
 	void saveAdmin (AdminForm adminForm);
 	
 	boolean checkEmail(AdminForm adminForm);
-	
-	boolean authenticate(String email, String password);
+
 }

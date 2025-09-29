@@ -55,6 +55,11 @@
 			<td th:text="*{contact.updatedAt}"></td>
 		</tr>
 	</table>
-<a th:href="@{/admin/contacts/{id}/edit(id=*{contact.id})}">編集</a>
+	<form th:action="@{/admin/contacts/{id}/edit(id=*{contact.id})}" method="get">
+		<input type="submit" value="編集">
+	</form>
+	<form th:action="@{/admin/signout}" method= "get">
+		<input type ="submit" value="ログアウト">
+	</form>
 </body>
 </html>
